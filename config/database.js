@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const URI = 'mongodb://localhost/mean-crud';
+const URI = 'mongodb://localhost:27017/mean-crud';
 
 mongoose.connect(URI)
     .then(db => console.log('DB is connected'))
