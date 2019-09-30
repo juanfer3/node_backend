@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
-const { Schema } = mongoose;
+const { Schema, model } = mongoose;
+const bcrypt = require('bcryptjs');
 
 const BookSchema = new Schema({
     name:{ type: String, required: true },
@@ -14,4 +15,10 @@ const UserSchema = new Schema({
     books: [BookSchema]
 });
 
-module.exports = mongoose.model('Users', UserSchema);
+UserSchema.methods.encryptPassword = async (password) => {
+    const salt = await bcrypt.genSalt(10);
+    return bcrypt.hash(password, salt);
+};
+
+
+module.exports = model('Users', UserSchema);
