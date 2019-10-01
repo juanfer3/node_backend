@@ -24,7 +24,8 @@ router.post('/users', userController.createUser);
 router.get('/users/:id', userController.showUser);
 router.put('/users/:id', userController.updateUser);
 
-router.get('/photos', photosController.getPhotos);
+router.get('/photos', access, photosController.getPhotos);
+
 router.route('/photos')
     .post( upload.single('image'), photosController.createPhoto )
 /*

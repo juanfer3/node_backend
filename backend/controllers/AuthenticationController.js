@@ -35,9 +35,18 @@ authenticationController.register = async (req, res) => {
 
 authenticationController.login = async (req, res) => {
    
-    res.json({
-        status: 200
-    })
+    const user = await User.findOne({username: req.body.username})
+    if(!user) {
+        return res.status(404).send("The username doesn't exists")
+    }
+    const validPassword = await user.comparePassword(req.body.password, user.password);
+    if (!validPassword) {
+        return res.status(401).send({auth: false, token: null});
+    }
+    const token = jwt.sign({id: user._id}, config.secret, {
+        expiresIn: 60 * 60 * 24
+    });
+    res.status(200).json({auth: true, token});
 }
 
 authenticationController.meUser = async (req, res) => {
@@ -45,6 +54,10 @@ authenticationController.meUser = async (req, res) => {
     res.json({
         status: 200
     })
+}
+
+authenticationController.logout = async (req, res) => {
+    res.status(200).send({ auth: false, token: null });
 }
 
 
